@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Physical PD Details — Editable Form</title>
+  <style>
+    :root{--bg:#f6f7fb;--card:#fff;--accent:#0f62fe;--muted:#666}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);margin:0;padding:24px;color:#111}
+    .container{max-width:1100px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .tabs{display:flex;gap:8px}
+    .tab{padding:8px 14px;background:linear-gradient(#fff,#f8f9ff);border-radius:8px;cursor:pointer;border:1px solid #e5e7ef}
+    .tab.active{background:var(--accent);color:#fff;border-color:transparent}
+    .card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 2px 6px rgba(20,30,60,0.06);margin-bottom:16px}
+    label{display:block;font-weight:600;margin-bottom:6px;margin-top:12px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .full{grid-column:1/-1}
+    input,textarea,select{width:100%;padding:8px;border-radius:6px;border:1px solid #d7dbe7;background:#fff}
+    textarea{min-height:80px}
+    small{color:var(--muted)}
+    .row-actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+    button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .muted-btn{background:#eef2ff;color:var(--accent);border:1px solid #e3e8ff}
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid #e6e6ef;padding:8px;text-align:left}
+    .small{font-size:13px}
+    .flex{display:flex;gap:8px}
+    .add-btn{background:#0b9e6a}
+    .danger{background:#c62828}
+    .export-actions{display:flex;gap:8px;align-items:center}
+    .note{font-size:13px;color:#444;margin-top:8px}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Physical PD Details — Editable Form</h1>
+      <div class="tabs">
+        <div class="tab active" data-tab="form">Form</div>
+        <div class="tab" data-tab="preview">Preview</div>
+        <div class="tab" data-tab="export">Export</div>
+      </div>
+    </header>
+
+    <div id="formTab" class="card">
+      <h2>Family Details</h2>
+      <div id="familyList"></div>
+      <div class="row-actions">
+        <button id="addFamily">+ Add Family Member</button>
+        <button class="muted-btn" id="clearFamily">Clear Family</button>
+      </div>
+
+      <hr style="margin:16px 0" />
+
+      <h2>Employment Details</h2>
+      <div class="card">
+        <div class="grid">
+          <div>
+            <label>Applicant Name</label>
+            <input id="emp_applicant_name" placeholder="Applicant name" />
+          </div>
+          <div>
+            <label>Age</label>
+            <input id="emp_age" placeholder="Age" />
+          </div>
+          <div>
+            <label>Qualification</label>
+            <input id="emp_qualification" placeholder="Qualification" />
+          </div>
+          <div>
+            <label>Employment Type</label>
+            <select id="emp_type"><option value="">Select</option><option>Salaried</option><option>Self-employed</option><option>Other</option></select>
+          </div>
+          <div>
+            <label>Company name</label>
+            <input id="emp_company" placeholder="Company" />
+          </div>
+          <div>
+            <label>Designation</label>
+            <input id="emp_designation" placeholder="Designation" />
+          </div>
+          <div>
+            <label>Working in current company (years)</label>
+            <input id="emp_current_years" placeholder="Years" />
+          </div>
+          <div>
+            <label>Experience in same line since</label>
+            <input id="emp_exp_since" placeholder="Year or years" />
+          </div>
+          <div class="full">
+            <label>Current Job Address</label>
+            <textarea id="emp_job_address"></textarea>
+          </div>
+          <div>
+            <label>Monthly Salary (₹)</label>
+            <input id="emp_salary" placeholder="Amount" />
+          </div>
+          <div>
+            <label>Salary Credit</label>
+            <select id="emp_salary_credit"><option>Bank</option><option>Cash</option></select>
+          </div>
+          <div>
+            <label>Working Time</label>
+            <input id="emp_working_time" placeholder="e.g. 9 AM - 6 PM" />
+          </div>
+          <div class="full">
+            <label>Colleagues (name & number) — separate by comma</label>
+            <input id="emp_colleagues" placeholder="Name1 - number1, Name2 - number2" />
+          </div>
+          <div>
+            <label>Supervisor / Owner / Manager (name & number)</label>
+            <input id="emp_supervisor" />
+          </div>
+          <div>
+            <label>TPC</label>
+            <input id="emp_tpc" />
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin:16px 0" />
+
+      <h2>Business Details (if Self-employed)</h2>
+      <div class="card">
+        <div class="grid">
+          <div>
+            <label>Business name</label>
+            <input id="biz_name" />
+          </div>
+          <div>
+            <label>Established year</label>
+            <input id="biz_est_year" />
+          </div>
+          <div>
+            <label>Business address</label>
+            <input id="biz_address" />
+          </div>
+          <div>
+            <label>Ownership</label>
+            <select id="biz_ownership"><option>Rented</option><option>Owned</option></select>
+          </div>
+          <div>
+            <label>Area</label>
+            <input id="biz_area" />
+          </div>
+          <div>
+            <label>Monthly Rent / Purchase Cost</label>
+            <input id="biz_rent" />
+          </div>
+          <div>
+            <label>Market value / security deposit</label>
+            <input id="biz_market_value" />
+          </div>
+          <div>
+            <label>Stability of business at same place</label>
+            <input id="biz_stability" />
+          </div>
+          <div class="full">
+            <label>Suppliers (name, number, city)</label>
+            <input id="biz_suppliers" />
+          </div>
+          <div class="full">
+            <label>Customers (name, number, city)</label>
+            <input id="biz_customers" />
+          </div>
+          <div class="full">
+            <label>Business briefing / Income table</label>
+            <textarea id="biz_briefing" placeholder="Short briefing or income table"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin:16px 0" />
+
+      <h2>Collateral (Legal & Technical) Details</h2>
+      <div class="card">
+        <div class="grid">
+          <div>
+            <label>Type of Property</label>
+            <select id="col_type"><option>SORP</option><option>SOCP</option><option>Rented</option></select>
+          </div>
+          <div>
+            <label>Ownership Title</label>
+            <input id="col_title" />
+          </div>
+          <div class="full">
+            <label>Address</label>
+            <input id="col_address" />
+          </div>
+          <div>
+            <label>Area (sq.ft / var)</label>
+            <input id="col_area" />
+          </div>
+          <div>
+            <label>Estimated Market Value (₹ approx.)</label>
+            <input id="col_value" />
+          </div>
+          <div>
+            <label>Property Purchased (₹)</label>
+            <input id="col_purchased" />
+          </div>
+          <div>
+            <label>Year of Purchase</label>
+            <input id="col_year" />
+          </div>
+          <div>
+            <label>Stability</label>
+            <input id="col_stability" />
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin:16px 0" />
+
+      <h2>Bureau Report Details</h2>
+      <div class="card">
+        <table id="bureauTable">
+          <thead>
+            <tr><th>Sr.No</th><th>Loan Type</th><th>Bank Name</th><th>Loan Amount</th><th>POS</th><th>EMI</th><th>Tenure</th><th>MOB</th><th>Disbursed Date</th><th>EMI Paid Bank</th><th>EMI Paid Date</th><th>Action</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="row-actions" style="margin-top:8px">
+          <button id="addBureau">+ Add Row</button>
+          <button class="muted-btn" id="clearBureau">Clear Rows</button>
+        </div>
+      </div>
+
+      <hr style="margin:16px 0" />
+
+      <h2>Banking Details</h2>
+      <div class="card">
+        <div class="grid">
+          <div>
+            <label>Bank Name</label>
+            <input id="bank_name" />
+          </div>
+          <div>
+            <label>Applicant / Co-applicant</label>
+            <input id="bank_holder" />
+          </div>
+          <div>
+            <label>Account Type</label>
+            <input id="bank_type" />
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin:16px 0" />
+
+      <h2>End Use & Recommendation</h2>
+      <div class="card">
+        <div class="grid">
+          <div>
+            <label>Applicant Want loan</label>
+            <input id="want_loan" />
+          </div>
+          <div>
+            <label>Reason</label>
+            <input id="loan_reason" />
+          </div>
+          <div>
+            <label>Comfort in EMI</label>
+            <input id="comfort_emi" />
+          </div>
+          <div class="full">
+            <label>Risk In this Case</label>
+            <textarea id="risk_case"></textarea>
+          </div>
+          <div class="full">
+            <label>Recommendation (Strength of the Case)</label>
+            <textarea id="recommendation"></textarea>
+          </div>
+          <div>
+            <label>Credit Officer / Manager</label>
+            <input id="credit_officer" />
+          </div>
+        </div>
+      </div>
+
+      <div class="export-actions">
+        <button onclick="previewDoc()">Preview Document</button>
+        <button onclick="exportToWord()">Export to Word</button>
+        <button class="muted-btn" id="resetAll">Reset All Fields</button>
+      </div>
+      <div class="note">Tip: Use the 'Preview' tab to see a formatted view before exporting. The 'Export to Word' button will download a .doc file containing the filled details.</div>
+    </div>
+
+    <div id="previewTab" class="card" style="display:none">
+      <h2>Preview</h2>
+      <div id="previewContent"></div>
+    </div>
+
+    <div id="exportTab" class="card" style="display:none">
+      <h2>Export</h2>
+      <p class="small">Click below to download a Word (.doc) file containing the filled PD details.</p>
+      <div class="row-actions">
+        <button onclick="exportToWord()">Download .doc</button>
+        <button onclick="downloadHTML()" class="muted-btn">Download HTML</button>
+      </div>
+      <div class="note">You can open the .doc in MS Word, Google Docs, or LibreOffice. If you need a .docx or .pdf export, open this .doc and save as desired from Word.</div>
+    </div>
+  </div>
+
+<script>
+// Simple dynamic form builder for family members & bureau rows
+let familyCount = 0;
+let bureauCount = 0;
+const familyList = document.getElementById('familyList');
+const bureauTbody = document.querySelector('#bureauTable tbody');
+
+function addFamilyRow(data = {}){
+  familyCount++;
+  const id = 'family_'+familyCount;
+  const wrap = document.createElement('div');
+  wrap.className = 'card';
+  wrap.id = id;
+  // Build inner HTML safely by creating elements instead of a large template string to avoid parsing issues
+  const row = document.createElement('div');
+  row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.alignItems = 'flex-start'; row.style.gap = '8px'; row.style.flexWrap = 'wrap';
+
+  const colName = document.createElement('div'); colName.style.flex = '1';
+  const lblName = document.createElement('label'); lblName.textContent = 'Full Name';
+  const inpName = document.createElement('input'); inpName.className = 'f_name'; inpName.placeholder = 'Name'; inpName.value = data.name || '';
+  colName.appendChild(lblName); colName.appendChild(inpName);
+
+  const colRelation = document.createElement('div'); colRelation.style.width = '120px';
+  const lblRel = document.createElement('label'); lblRel.textContent = 'Relation';
+  const inpRel = document.createElement('input'); inpRel.className = 'f_relation'; inpRel.placeholder = 'Relation'; inpRel.value = data.relation || '';
+  colRelation.appendChild(lblRel); colRelation.appendChild(inpRel);
+
+  const colAge = document.createElement('div'); colAge.style.width = '100px';
+  const lblAge = document.createElement('label'); lblAge.textContent = 'Age';
+  const inpAge = document.createElement('input'); inpAge.className = 'f_age'; inpAge.placeholder = 'Age'; inpAge.value = data.age || '';
+  colAge.appendChild(lblAge); colAge.appendChild(inpAge);
+
+  const colQual = document.createElement('div'); colQual.style.width = '200px';
+  const lblQual = document.createElement('label'); lblQual.textContent = 'Qualification';
+  const inpQual = document.createElement('input'); inpQual.className = 'f_qual'; inpQual.placeholder = 'Qualification'; inpQual.value = data.qual || '';
+  colQual.appendChild(lblQual); colQual.appendChild(inpQual);
+
+  const colActions = document.createElement('div'); colActions.style.display = 'flex'; colActions.style.flexDirection = 'column'; colActions.style.gap = '6px';
+  const lblEmpty = document.createElement('label'); lblEmpty.innerHTML = '&nbsp;';
+  const btnWrap = document.createElement('div'); btnWrap.className = 'flex';
+  const delBtn = document.createElement('button'); delBtn.className = 'danger'; delBtn.textContent = 'Delete';
+  delBtn.addEventListener('click', ()=> removeFamily(id));
+  btnWrap.appendChild(delBtn);
+  colActions.appendChild(lblEmpty); colActions.appendChild(btnWrap);
+
+  row.appendChild(colName); row.appendChild(colRelation); row.appendChild(colAge); row.appendChild(colQual); row.appendChild(colActions);
+  wrap.appendChild(row);
+  familyList.appendChild(wrap);
+}
+function removeFamily(id){
+  const el = document.getElementById(id);
+  if(el) el.remove();
+}
+function clearFamily(){familyList.innerHTML=''; familyCount=0}
+
+function addBureauRow(obj={}){
+  bureauCount++;
+  const tr = document.createElement('tr');
+  tr.id = 'bureau_'+bureauCount;
+  function tdWithInput(cls, value=''){ const td = document.createElement('td'); const inp = document.createElement('input'); inp.className = cls; inp.value = value; td.appendChild(inp); return td; }
+  tr.appendChild(tdWithInput('', String(bureauCount))); // Sr.No as plain text inside td
+  tr.appendChild(tdWithInput('b_loan_type', obj.loan_type||''));
+  tr.appendChild(tdWithInput('b_bank', obj.bank||''));
+  tr.appendChild(tdWithInput('b_amount', obj.amount||''));
+  tr.appendChild(tdWithInput('b_pos', obj.pos||''));
+  tr.appendChild(tdWithInput('b_emi', obj.emi||''));
+  tr.appendChild(tdWithInput('b_tenure', obj.tenure||''));
+  tr.appendChild(tdWithInput('b_mob', obj.mob||''));
+  tr.appendChild(tdWithInput('b_disb', obj.disb||''));
+  tr.appendChild(tdWithInput('b_emi_bank', obj.emi_bank||''));
+  tr.appendChild(tdWithInput('b_emi_date', obj.emi_date||''));
+  const actTd = document.createElement('td'); const del = document.createElement('button'); del.className='danger'; del.textContent='Delete'; del.addEventListener('click', ()=> removeBureau(tr.id)); actTd.appendChild(del); tr.appendChild(actTd);
+  bureauTbody.appendChild(tr);
+}
+function removeBureau(id){ const el = document.getElementById(id); if(el) el.remove(); }
+function clearBureau(){bureauTbody.innerHTML=''; bureauCount=0}
+
+// Attach buttons
+document.getElementById('addFamily').addEventListener('click',()=>addFamilyRow());
+document.getElementById('clearFamily').addEventListener('click',clearFamily);
+document.getElementById('addBureau').addEventListener('click',()=>addBureauRow());
+document.getElementById('clearBureau').addEventListener('click',clearBureau);
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', (e)=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  e.currentTarget.classList.add('active');
+  const tab = e.currentTarget.getAttribute('data-tab');
+  document.getElementById('formTab').style.display = tab==='form' ? 'block' : 'none';
+  document.getElementById('previewTab').style.display = tab==='preview' ? 'block' : 'none';
+  document.getElementById('exportTab').style.display = tab==='export' ? 'block' : 'none';
+  if(tab==='preview') previewDoc();
+}));
+
+// Reset all
+document.getElementById('resetAll').addEventListener('click',()=>{
+  if(!confirm('Reset all fields?')) return;
+  document.querySelectorAll('input,textarea,select').forEach(i=>{ if(i.tagName.toLowerCase() === 'input') i.value=''; else i.value=''; });
+  clearFamily(); clearBureau();
+});
+
+function collectData(){
+  const family = Array.from(familyList.querySelectorAll('.card')).map(card=>({
+    name: card.querySelector('.f_name').value,
+    relation: card.querySelector('.f_relation').value,
+    age: card.querySelector('.f_age').value,
+    qual: card.querySelector('.f_qual').value
+  }));
+  const bureau = Array.from(bureauTbody.querySelectorAll('tr')).map(tr=>({
+    loan_type: (tr.querySelector('.b_loan_type')||{value:''}).value,
+    bank: (tr.querySelector('.b_bank')||{value:''}).value,
+    amount: (tr.querySelector('.b_amount')||{value:''}).value,
+    pos: (tr.querySelector('.b_pos')||{value:''}).value,
+    emi: (tr.querySelector('.b_emi')||{value:''}).value,
+    tenure: (tr.querySelector('.b_tenure')||{value:''}).value,
+    mob: (tr.querySelector('.b_mob')||{value:''}).value,
+    disb: (tr.querySelector('.b_disb')||{value:''}).value,
+    emi_bank: (tr.querySelector('.b_emi_bank')||{value:''}).value,
+    emi_date: (tr.querySelector('.b_emi_date')||{value:''}).value
+  }));
+
+  const data = {
+    family, bureau,
+    employment: {
+      applicant_name: document.getElementById('emp_applicant_name').value,
+      age: document.getElementById('emp_age').value,
+      qualification: document.getElementById('emp_qualification').value,
+      emp_type: document.getElementById('emp_type').value,
+      company: document.getElementById('emp_company').value,
+      designation: document.getElementById('emp_designation').value,
+      current_years: document.getElementById('emp_current_years').value,
+      exp_since: document.getElementById('emp_exp_since').value,
+      job_address: document.getElementById('emp_job_address').value,
+      salary: document.getElementById('emp_salary').value,
+      salary_credit: document.getElementById('emp_salary_credit').value,
+      working_time: document.getElementById('emp_working_time').value,
+      colleagues: document.getElementById('emp_colleagues').value,
+      supervisor: document.getElementById('emp_supervisor').value,
+      tpc: document.getElementById('emp_tpc').value
+    },
+    business: {
+      name: document.getElementById('biz_name').value,
+      est_year: document.getElementById('biz_est_year').value,
+      address: document.getElementById('biz_address').value,
+      ownership: document.getElementById('biz_ownership').value,
+      area: document.getElementById('biz_area').value,
+      rent: document.getElementById('biz_rent').value,
+      market_value: document.getElementById('biz_market_value').value,
+      stability: document.getElementById('biz_stability').value,
+      suppliers: document.getElementById('biz_suppliers').value,
+      customers: document.getElementById('biz_customers').value,
+      briefing: document.getElementById('biz_briefing').value
+    },
+    collateral: {
+      type: document.getElementById('col_type').value,
+      title: document.getElementById('col_title').value,
+      address: document.getElementById('col_address').value,
+      area: document.getElementById('col_area').value,
+      value: document.getElementById('col_value').value,
+      purchased: document.getElementById('col_purchased').value,
+      year: document.getElementById('col_year').value,
+      stability: document.getElementById('col_stability').value
+    },
+    banking: {
+      bank_name: document.getElementById('bank_name').value,
+      bank_holder: document.getElementById('bank_holder').value,
+      bank_type: document.getElementById('bank_type').value
+    },
+    enduse: {
+      want_loan: document.getElementById('want_loan').value,
+      reason: document.getElementById('loan_reason').value,
+      comfort_emi: document.getElementById('comfort_emi').value,
+      risk_case: document.getElementById('risk_case').value,
+      recommendation: document.getElementById('recommendation').value,
+      credit_officer: document.getElementById('credit_officer').value
+    }
+  };
+  return data;
+}
+
+// Build HTML fragment for preview and full document for export. Preview uses a fragment (no outer <html> or <head>) to avoid injection issues when setting innerHTML.
+function makeHTMLDocument(data, full=false){
+  const esc = (s)=> String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  let body = '';
+  body += `<h1>Physical PD Details</h1>`;
+  body += `<h2>Family Details</h2><table><tr><th>Name</th><th>Relation</th><th>Age</th><th>Qualification</th></tr>`;
+  (data.family||[]).forEach(f=>{body+=`<tr><td>${esc(f.name)}</td><td>${esc(f.relation)}</td><td>${esc(f.age)}</td><td>${esc(f.qual)}</td></tr>`});
+  body += `</table>`;
+
+  body += `<h2>Employment Details</h2><table>`;
+  const e = data.employment || {};
+  body+=`<tr><td>Applicant Name</td><td>${esc(e.applicant_name)}</td><td>Age</td><td>${esc(e.age)}</td></tr>`;
+  body+=`<tr><td>Qualification</td><td>${esc(e.qualification)}</td><td>Employment Type</td><td>${esc(e.emp_type)}</td></tr>`;
+  body+=`<tr><td>Company</td><td>${esc(e.company)}</td><td>Designation</td><td>${esc(e.designation)}</td></tr>`;
+  body+=`<tr><td>Working (yrs)</td><td>${esc(e.current_years)}</td><td>Experience Since</td><td>${esc(e.exp_since)}</td></tr>`;
+  body+=`<tr><td>Job Address</td><td colspan="3">${esc(e.job_address)}</td></tr>`;
+  body+=`<tr><td>Monthly Salary</td><td>${esc(e.salary)}</td><td>Salary Credit</td><td>${esc(e.salary_credit)}</td></tr>`;
+  body+=`<tr><td>Working Time</td><td>${esc(e.working_time)}</td><td>Supervisor</td><td>${esc(e.supervisor)}</td></tr>`;
+  body+=`</table>`;
+
+  body += `<h2>Business Details</h2><table>`;
+  const b = data.business || {};
+  body+=`<tr><td>Business Name</td><td>${esc(b.name)}</td><td>Established Year</td><td>${esc(b.est_year)}</td></tr>`;
+  body+=`<tr><td>Address</td><td colspan="3">${esc(b.address)}</td></tr>`;
+  body+=`<tr><td>Ownership</td><td>${esc(b.ownership)}</td><td>Area</td><td>${esc(b.area)}</td></tr>`;
+  body+=`<tr><td>Rent / Cost</td><td>${esc(b.rent)}</td><td>Market value</td><td>${esc(b.market_value)}</td></tr>`;
+  body+=`<tr><td>Suppliers</td><td>${esc(b.suppliers)}</td><td>Customers</td><td>${esc(b.customers)}</td></tr>`;
+  body+=`<tr><td colspan="4">Briefing / Income table:<br>${esc(b.briefing)}</td></tr>`;
+  body+=`</table>`;
+
+  body += `<h2>Collateral Details</h2><table>`;
+  const c = data.collateral || {};
+  body+=`<tr><td>Type</td><td>${esc(c.type)}</td><td>Ownership Title</td><td>${esc(c.title)}</td></tr>`;
+  body+=`<tr><td>Address</td><td colspan="3">${esc(c.address)}</td></tr>`;
+  body+=`<tr><td>Area</td><td>${esc(c.area)}</td><td>Estimated Value</td><td>${esc(c.value)}</td></tr>`;
+  body+=`<tr><td>Purchased</td><td>${esc(c.purchased)}</td><td>Year</td><td>${esc(c.year)}</td></tr>`;
+  body+=`</table>`;
+
+  body += `<h2>Bureau Report</h2><table><tr><th>Sr.No</th><th>Loan Type</th><th>Bank Name</th><th>Loan Amount</th><th>POS</th><th>EMI</th><th>Tenure</th><th>MOB</th><th>Disbursed Date</th><th>EMI Paid Bank</th><th>EMI Paid Date</th></tr>`;
+  (data.bureau||[]).forEach((r,i)=>{body+=`<tr><td>${i+1}</td><td>${esc(r.loan_type)}</td><td>${esc(r.bank)}</td><td>${esc(r.amount)}</td><td>${esc(r.pos)}</td><td>${esc(r.emi)}</td><td>${esc(r.tenure)}</td><td>${esc(r.mob)}</td><td>${esc(r.disb)}</td><td>${esc(r.emi_bank)}</td><td>${esc(r.emi_date)}</td></tr>`});
+  body+='</table>';
+
+  body += `<h2>Banking Details</h2><table>`;
+  const bk = data.banking || {};
+  body+=`<tr><td>Bank Name</td><td>${esc(bk.bank_name)}</td><td>Holder</td><td>${esc(bk.bank_holder)}</td></tr>`;
+  body+=`<tr><td>Account Type</td><td>${esc(bk.bank_type)}</td><td></td><td></td></tr>`;
+  body+='</table>';
+
+  body += `<h2>End Use & Recommendation</h2><table>`;
+  const eu = data.enduse || {};
+  body+=`<tr><td>Applicant Want Loan</td><td>${esc(eu.want_loan)}</td><td>Reason</td><td>${esc(eu.reason)}</td></tr>`;
+  body+=`<tr><td>Comfort in EMI</td><td>${esc(eu.comfort_emi)}</td><td>Credit Officer</td><td>${esc(eu.credit_officer)}</td></tr>`;
+  body+=`<tr><td>Risk in Case</td><td colspan="3">${esc(eu.risk_case)}</td></tr>`;
+  body+=`<tr><td>Recommendation</td><td colspan="3">${esc(eu.recommendation)}</td></tr>`;
+  body+='</table>';
+
+  body += `<p style="font-size:11px;color:#555">Generated on ${new Date().toLocaleString()}</p>`;
+
+  if(full){
+    // Return a complete HTML document for downloads (safe because it's not inserted into current document)
+    return `<!doctype html><html><head><meta charset="utf-8"><title>PD Details</title><style>body{font-family:Arial,sans-serif;font-size:13px;color:#111;padding:18px}h2{background:#f2f6ff;padding:8px;border-radius:6px}table{width:100%;border-collapse:collapse;margin-bottom:10px}td,th{border:1px solid #ddd;padding:6px;vertical-align:top}</style></head><body>${body}</body></html>`;
+  }
+  // Return fragment only (no <html> / <head>) for safe previewing inside existing page
+  return body;
+}
+
+function previewDoc(){
+  const data = collectData();
+  const fragment = makeHTMLDocument(data, false);
+  // Use a container instead of injecting a full HTML document; this avoids parse errors and document.write issues.
+  document.getElementById('previewContent').innerHTML = fragment;
+  // switch to preview tab if not already
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector('[data-tab="preview"]').classList.add('active');
+  document.getElementById('formTab').style.display='none';
+  document.getElementById('previewTab').style.display='block';
+  document.getElementById('exportTab').style.display='none';
+}
+
+function exportToWord(){
+  const data = collectData();
+  const html = makeHTMLDocument(data, true); // full document for download
+  // Use explicit unicode BOM using escape sequence to avoid parsing issues
+  const blob = new Blob(["\uFEFF", html], {type:'application/msword'});
+  const applicant = (data.employment.applicant_name || 'PD_Details').replace(/[^a-z0-9]/gi,'_');
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${applicant}.doc`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function downloadHTML(){
+  const data = collectData();
+  const html = makeHTMLDocument(data, true);
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'PD_Details.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// Initialize with 2 family rows & 1 bureau row as helpful defaults
+addFamilyRow({name:'Applicant (Mr.)',relation:'Self',age:'',qual:''});
+addFamilyRow({name:'Co-Applicant (Mrs.)',relation:'Spouse',age:'',qual:''});
+addBureauRow();
+
+</script>
+</body>
+</html>
